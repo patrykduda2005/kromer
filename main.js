@@ -282,6 +282,15 @@ function update() {
     if (afkCd == false && afkCharges > 0) afk();
     playerMovement();
     
+    winds.children.iterate(function (child) {
+    	if(Phaser.Math.Distance.Between(player.x, player.y, child.x, child.y) < 200) {
+    		if (child.body.velocity.x < -2500) {
+				child.setVelocityX(-2500);
+			} else if (child.body.velocity.x > 2500) {
+				child.setVelocityX(2500);
+			}
+    	}
+    });
 
     //if (Phaser.Math.Distance.Between(guard.x, guard.y, target.x, target.y) < 4) guard.body.reset(target.x,target.y);
 
@@ -443,14 +452,14 @@ function yeet(player, zone) {
                 
             
 
-            child.setVelocityX(2500);
+            child.setVelocityX(5000);
             child.body.setAllowGravity(true);
             afkCd = false;
             child.alpha = 1;
             zone.destroy();
         } else if (Phaser.Math.Distance.Between(zone.x+1280/2, zone.y, child.x, child.y) < 10) {
             
-            child.setVelocityX(-2500);
+            child.setVelocityX(-5000);
             child.body.setAllowGravity(true);
             afkCd = false;
             child.alpha = 1;
@@ -458,6 +467,14 @@ function yeet(player, zone) {
         }
     });
 
+}
+
+function yeetSlow(player, wind) {
+	if (wind.body.velocity.x < -2500) {
+		wind.setVelocityX(-2500);
+	} else if (wind.body.velocity.x > 2500) {
+		wind.setVelocityX(2500);
+	}
 }
 
 function guardDodge(wind, guard) {
