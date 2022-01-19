@@ -211,7 +211,7 @@ function create() {
     //target = new Phaser.Math.Vector2(960, 1600);
 
 
-    cursors = this.input.keyboard.createCursorKeys();
+    var cursors = this.input.keyboard.createCursorKeys();
 
     this.physics.add.collider(player, platform);
     this.physics.add.collider(guards, platform);
@@ -228,7 +228,10 @@ function create() {
     }, null, this);
     this.physics.add.overlap(player, checkpoints, checkpointAquaire, null, this);
     this.physics.add.overlap(player, zonesTextures, function (player, lina) {
-        lina.destroy();
+        if (cursors.up.isDown) {
+		player.setVelocityY(-300);
+	}
+	    lina.destroy();
     }, null, this);
     player.setCollideWorldBounds(true);
     boss.setCollideWorldBounds(true);
