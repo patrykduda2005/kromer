@@ -211,7 +211,7 @@ function create() {
     //target = new Phaser.Math.Vector2(960, 1600);
 
 
-    var cursors = this.input.keyboard.createCursorKeys();
+    cursors = this.input.keyboard.createCursorKeys();
 
     this.physics.add.collider(player, platform);
     this.physics.add.collider(guards, platform);
