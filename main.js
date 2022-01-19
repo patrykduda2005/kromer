@@ -190,7 +190,7 @@ function create() {
     
 
     platforma(540, 750, 1280, 30, this);
-    platforma(1100, 600, 32, 270, this);
+    platforma(1100, 610, 32, 260, this);
 
     platforma(1200, 650, 100, 32, this);
     platforma(1200, 550, 100, 32, this);
@@ -199,7 +199,7 @@ function create() {
 
     platforma(640, 450, 32, 100, this);
 
-    platforma(0, 470, 20, 32 ,this);
+    platforma(0, 480, 20, 16 ,this);
 
     //ostatetium
     platforma(700, 400, 1280, 32, this);
@@ -285,7 +285,7 @@ function update() {
     //this.physics.accelerateTo(guard1, 440,1870);
     hud(this);
     backAndForth(this);
-    if (afkCd == false && afkCharges > 0) afk();
+    if (afkCd == false && afkCharges > 0 && player.body.enable == true) afk();
     playerMovement();
     
     winds.children.iterate(function (child) {
