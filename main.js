@@ -41,10 +41,13 @@ function preload() {
 }
 
 var gameSave = {
-    afkCharges:10,
+    afkCharges:15,
     playerX:100,
-    playerY:2000
+    playerY:2000,
+    bossHealth: 10
 }
+
+var bossHealth = 10;
 
 function create() {
     
@@ -63,6 +66,7 @@ function create() {
     guard.body.setAllowGravity(false);*/
     checkpoints = this.physics.add.staticGroup();
     checkpoints.create(200, 1065, 'chlebak');
+    checkpoints.create(1250, 360, 'chlebak');
     //checkpoints.create(300, 1562, 'chlebak');
     /*checkpoint1 = checkpoints.create(50, 2070, 'chlebak');
     checkpoint2 = checkpoints.create(300, 1520, 'chlebak');*/
@@ -71,7 +75,7 @@ function create() {
     player.setBounce(0.2);
     player.body.setMaxVelocity(300, 1000);
 
-    boss = this.physics.add.image(100, 100, 'boss').setBounce(1).setVelocityX(300).setVelocityY(300).setGravityY(0);
+    boss = this.physics.add.image(100, 100, 'boss').setBounce(1).setVelocityX(400).setVelocityY(400).setGravityY(0);
 
 
     zilean = this.physics.add.staticImage(1100, 950, 'zilean');
@@ -114,6 +118,9 @@ function create() {
     speakers5 = speakers.create(180, 625, 'speaker');
     speakers5.flipX = true;
     speakers5.angle = -45;
+
+    speakers6 = speakers.create(640, 365, 'speaker');
+    speakers6.angle= 90;
     //speakers3 = speakers.create(120, 1270, 'speaker');
 
     winds = this.physics.add.group();
@@ -129,6 +136,8 @@ function create() {
     snipe3 = snipes.create(100, 950,'snipe').flipX = true;
     snipe4 = snipes.create(100, 850, 'snipe').flipX = true;
     snipe5 = snipes.create(1050, 525, 'snipe');
+    snipe6 = snipes.create(-10, 250, 'snipe').flipX=true;
+    //snipe7 = snipes.create(1250, 225, 'snipe');
 
     zones = this.physics.add.staticGroup();
     zonesTextures = this.physics.add.staticGroup();
@@ -203,6 +212,8 @@ function create() {
 
     //ostatetium
     platforma(700, 400, 1280, 32, this);
+
+    platforma(1250, 300, 100, 32, this);
     
     
     //platform.add(this.add.rectangle(640, 2128, 1280, 64, 0x21572f));
@@ -223,6 +234,7 @@ function create() {
     this.physics.add.overlap(player, zones, yeet, null, this);
     this.physics.add.overlap(winds, guards, guardDodge,null, this);
     this.physics.add.overlap(player, boss, death, null, this);
+    this.physics.add.overlap(winds, boss, bossDamaged, null, this);
     this.physics.add.overlap(zilean,player, function() {
         player.setVelocityY(-300);
     }, null, this);
@@ -238,6 +250,7 @@ function create() {
     guard1.setCollideWorldBounds(true);
 
     afkChargesText = this.add.text(16, 1900, 'Afk Charges: ' + afkCharges, {fontSize: '32px', fill: '#000'});
+    bossHealthText = this.add.text(640, 16, 'Health: ' + bossHealth, {fontSize: '32px', fill: '#f00'});
     //debugText = this.add.text(200, 1400, 'hmm');
 
     //camera i bounds
@@ -263,12 +276,13 @@ function create() {
 var gameOver = false;
 var obiadTrigger = 0;
 var afkCd = false;
-var afkCharges = 10;
+var afkCharges = 20;
 
 
 function update() {
-    if (gameOver == true) {
-        return;
+    if (bossHealth <= 0) {
+        document.write('<a href="https://www.youtube.com/watch?v=QLurUzvNl-0&ab_channel=ShakeiDudi">Nagroda</a>');
+        bossHealth = 10;
     }
 
     if (obiadTrigger != 0) {
@@ -291,12 +305,17 @@ function update() {
     winds.children.iterate(function (child) {
     	if(Phaser.Math.Distance.Between(player.x, player.y, child.x, child.y) < 350) {
             //debugText.setText('Bel: ' + child.body.velocity.x);
-    		if (child.body.velocity.x < -2500) {
-				child.setVelocityX(-2500);
-			} else if (child.body.velocity.x > 2500) {
-				child.setVelocityX(2500);
+    		if (child.body.velocity.x < -1500) {
+                //child.body.setGravityY(0);
+				child.setVelocityX(-1500);
+			} else if (child.body.velocity.x > 1500) {
+                //child.body.setGravityY(0);
+				child.setVelocityX(1500);
 			}
     	}
+        if(Phaser.Math.Distance.Between(child.x, child.y, boss.x, boss.y) < 350 && child.alpha == 1 && child.body.velocity.x > 0) {
+            contextHere.physics.moveToObject(child, boss, 1000);
+        }
     });
 
 
@@ -370,6 +389,7 @@ function death(player, guard) {
         //contextHere.physics.pause();
        // gameOver = true;
        afkCharges = gameSave.afkCharges;
+       bossHealth = gameSave.bossHealth;
        document.getElementById('tekst').innerHTML = "Oto moja gra, która jest świetna";
         contextHere.registry.destroy();
         contextHere.events.off();
@@ -461,14 +481,14 @@ function yeet(player, zone) {
                 
             
 
-            child.setVelocityX(7000);
+            child.setVelocityX(9999);
             child.body.setAllowGravity(true);
             afkCd = false;
             child.alpha = 1;
             zone.destroy();
         } else if (Phaser.Math.Distance.Between(zone.x+1280/2, zone.y, child.x, child.y) < 10) {
             
-            child.setVelocityX(-7000);
+            child.setVelocityX(-9999);
             child.body.setAllowGravity(true);
             afkCd = false;
             child.alpha = 1;
@@ -501,7 +521,8 @@ function checkpointAquaire(player, chlebak) {
     if (chlebak.texture.key == 'chlebak') {
         gameSave.playerX = chlebak.x;
         gameSave.playerY = chlebak.y - 10;
-        gameSave.afkCharges = afkCharges;  
+        gameSave.afkCharges = afkCharges; 
+        gameSave.bossHealth = bossHealth; 
     }
     checkpoints.children.iterate(function(child) {
         child.setTexture('chlebak');
@@ -516,18 +537,25 @@ function reloadSnipes() {
             if (Phaser.Math.Distance.Between(child.x, child.y, childWind.x, childWind.y) < 10) dziecko--;
             
         });
-              
+        
+
         if (child.flipX == true && dziecko == 1) {
-            winds.create(child.x, child.y, 'wind').setScale(1).refreshBody().setAlpha(0).body.setAllowGravity(false).setGravityY(10); //.body.setVelocityX(3000);
+            winds.create(child.x, child.y, 'wind').setScale(1).refreshBody().setAlpha(0).body.setAllowGravity(false).setGravityY(1); //.body.setVelocityX(3000);
             zones.add(contextHere.add.zone(child.x + 1280/2, child.y, 1280, 14));
             zonesTextures.create(child.x + 1280/2 + 10, child.y, 'lina');
             //console.log(dziecko);
             
         } else if (dziecko == 1) {
-            let thisWind = winds.create(child.x, child.y, 'wind').setScale(1).refreshBody().setAlpha(0).setFlip(true).body.setAllowGravity(false).setGravityY(10);
+            let thisWind = winds.create(child.x, child.y, 'wind').setScale(1).refreshBody().setAlpha(0).setFlip(true).body.setAllowGravity(false).setGravityY(1);
             //console.log(dziecko);
             zones.add(contextHere.add.zone(child.x - 1280/2, child.y, 1280, 14));
             zonesTextures.create(child.x - 1280/2 - 10, child.y, 'lina');
         }
     });
+}
+
+function bossDamaged(boss, wind) {
+    wind.destroy();
+    bossHealth--;
+    bossHealthText.setText('Health: ' + bossHealth);
 }
