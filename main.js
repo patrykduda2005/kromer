@@ -66,7 +66,7 @@ function create() {
     guard.body.setAllowGravity(false);*/
     checkpoints = this.physics.add.staticGroup();
     checkpoints.create(200, 1065, 'chlebak');
-    checkpoints.create(1250, 360, 'chlebak');
+    //checkpoints.create(1250, 360, 'chlebak');
     //checkpoints.create(300, 1562, 'chlebak');
     /*checkpoint1 = checkpoints.create(50, 2070, 'chlebak');
     checkpoint2 = checkpoints.create(300, 1520, 'chlebak');*/
