@@ -38,6 +38,9 @@ function preload() {
     this.load.audio('reload', 'assets/reload.mp3');
     this.load.image('lina', 'assets/lina.png');
     this.load.image('boss', 'assets/boss.png');
+    this.load.image('gora', 'assets/gora.png');
+    this.load.image('chodzenie','assets/prawolewo.png');
+    this.load.image('afk', 'assets/afk.png');
 }
 
 var gameSave = {
@@ -50,10 +53,15 @@ var gameSave = {
 var bossHealth = 10;
 
 function create() {
+    game.sound.volume = 0.2;
     
     this.add.image(640, 1080, 'back').setScale(1.6, 3.6);
 
     this.add.image(520, 1355, 'hak').setScale(0.5, 0.35);
+    this.add.image(640, 2000, 'gora').setScale(0.5);
+    this.add.image(340, 2000, 'chodzenie').setScale(0.5);
+    this.add.image(1000, 1200, 'afk').setScale(0.5);
+
 
 
 
@@ -66,7 +74,7 @@ function create() {
     guard.body.setAllowGravity(false);*/
     checkpoints = this.physics.add.staticGroup();
     checkpoints.create(200, 1065, 'chlebak');
-    checkpoints.create(1250, 360, 'chlebak');
+    //checkpoints.create(1250, 360, 'chlebak');
     //checkpoints.create(300, 1562, 'chlebak');
     /*checkpoint1 = checkpoints.create(50, 2070, 'chlebak');
     checkpoint2 = checkpoints.create(300, 1520, 'chlebak');*/
